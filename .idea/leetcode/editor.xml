@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LeetcodeEditor">
+    <option name="projectConfig">
+      <map>
+        <entry key="$PROJECT_DIR$/../AlgorithmPractise/loong's code/leetcode/editor/cn/[2500]删除每行中的最大值.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/../AlgorithmPractise/loong's code/leetcode/editor/cn/doc/content/[2500]删除每行中的最大值.md" />
+              <option name="frontendQuestionId" value="leetcode.cn2500" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/../AlgorithmPractise/loong's code/leetcode/editor/cn/[2500]删除每行中的最大值.py" />
+              <option name="titleSlug" value="delete-greatest-value-in-each-row" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../AlgorithmPractise/loong's code/leetcode/editor/cn/[2569]更新数组后处理求和查询.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/../AlgorithmPractise/loong's code/leetcode/editor/cn/doc/content/[2569]更新数组后处理求和查询.md" />
+              <option name="frontendQuestionId" value="leetcode.cn2569" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/../AlgorithmPractise/loong's code/leetcode/editor/cn/[2569]更新数组后处理求和查询.py" />
+              <option name="titleSlug" value="handling-sum-queries-after-update" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
