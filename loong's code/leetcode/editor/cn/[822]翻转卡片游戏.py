@@ -48,8 +48,27 @@ from typing import List
 # leetcode submit region begin(Prohibit modification and deletion)
 class Solution:
     def flipgame(self, fronts: List[int], backs: List[int]) -> int:
-        s = {a for a, b in zip(fronts, backs) if a == b}
-        return min((x for x in chain(fronts, backs) if x not in s), default=0)
+        # 创建一个空集合来存放那些在正面和背面都出现的数字
+        same = set()
+
+        # 遍历每一对正面和背面的数字
+        for i in range(len(fronts)):
+            # 如果正面和背面的数字相同，就将这个数字加入到集合中
+            if fronts[i] == backs[i]:
+                same.add(fronts[i])
+
+        # 初始化一个非常大的数字，表示我们还没有找到满足条件的数字
+        ans = float('inf')
+
+        # 再次遍历所有的正面和背面的数字
+        for x in fronts + backs:
+            # 如果这个数字没有在集合中（也就是说，它没有同时出现在任何一张卡片的正面和背面），并且比我们之前找到的数字小
+            if x not in same and x < ans:
+                # 那么更新答案
+                ans = x
+
+        # 如果答案还是初始值（表示我们没有找到满足条件的数字），就返回 0，否则返回答案
+        return 0 if ans == float('inf') else ans
 
 
 # leetcode submit region end(Prohibit modification and deletion)
