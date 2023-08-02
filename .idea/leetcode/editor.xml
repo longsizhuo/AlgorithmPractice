@@ -3,6 +3,17 @@
   <component name="LeetcodeEditor">
     <option name="projectConfig">
       <map>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[2050]并行课程 III.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[2050]并行课程 III.md" />
+              <option name="frontendQuestionId" value="leetcode.cn2050" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[2050]并行课程 III.py" />
+              <option name="titleSlug" value="parallel-courses-iii" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../AlgorithmPractise/loong's code/leetcode/editor/cn/[2500]删除每行中的最大值.py">
           <value>
             <LeetcodeEditor>
