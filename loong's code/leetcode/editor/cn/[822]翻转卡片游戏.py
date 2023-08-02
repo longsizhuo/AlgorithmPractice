@@ -41,21 +41,16 @@
 # 
 #  Related Topics 数组 哈希表 👍 91 👎 0
 from cmath import inf
+from itertools import chain
 from typing import List
 
 
 # leetcode submit region begin(Prohibit modification and deletion)
 class Solution:
     def flipgame(self, fronts: List[int], backs: List[int]) -> int:
-        ans = inf
-        for i in zip(*[fronts, backs]):
-            print(i)
-            if i[0] != i[1]:
-                if i[0] not in backs:
-                    ans = min(ans, i[0])
-                if i[1] not in fronts:
-                    ans = min(ans, i[1])
-        return ans if ans != inf else 0
+        s = {a for a, b in zip(fronts, backs) if a == b}
+        return min((x for x in chain(fronts, backs) if x not in s), default=0)
+
 
 # leetcode submit region end(Prohibit modification and deletion)
 print(Solution().flipgame([1,2,4,4,7], [1,3,4,1,3]))
