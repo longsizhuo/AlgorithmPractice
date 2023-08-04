@@ -72,5 +72,4 @@ class Solution:
             for j, v in enumerate(row):
                 if v == 1:
                     return dfs(i, j, cnt0 + 1)
-
-        # leetcode submit region end(Prohibit modification and deletion)
+# leetcode submit region end(Prohibit modification and deletion)
