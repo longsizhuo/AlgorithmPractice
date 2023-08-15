@@ -36,6 +36,17 @@
             </LeetcodeEditor>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[833]字符串中的查找与替换.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[833]字符串中的查找与替换.md" />
+              <option name="frontendQuestionId" value="leetcode.cn833" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[833]字符串中的查找与替换.py" />
+              <option name="titleSlug" value="find-and-replace-in-string" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[980]不同路径 III.py">
           <value>
             <LeetcodeEditor>
