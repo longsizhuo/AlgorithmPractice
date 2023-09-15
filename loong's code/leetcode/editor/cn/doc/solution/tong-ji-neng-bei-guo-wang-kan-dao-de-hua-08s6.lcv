@@ -1,0 +1,147 @@
+能攻击到国王的皇后，需要满足：
+
+1. 皇后与国王在同一行，或者同一列，或者同一斜线。
+2. 皇后与国王之间没有棋子。换句话说，皇后不能被其它皇后挡住。
+
+一种思路是枚举每个皇后，去判断是否满足上述条件。
+
+更加巧妙的做法是，站在国王的视角，计算有哪些皇后能被国王「看到」。
+
+想象成从国王的位置发射八个方向的射线，记录每条射线首次遇到的皇后。
+
+* [sol-Python3]
+
+```py
+class Solution:
+    def queensAttacktheKing(self, queens: List[List[int]], king: List[int]) -> List[List[int]]:
+        s = set(map(tuple, queens))
+        ans = []
+        for dx, dy in (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1):
+            x, y = king[0] + dx, king[1] + dy
+            while 0 <= x < 8 and 0 <= y < 8:
+                if (x, y) in s:
+                    ans.append([x, y])
+                    break
+                x += dx
+                y += dy
+        return ans
+```
+
+* [sol-Java]
+
+```java
+class Solution {
+    private final static int[][] directions = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+
+    public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
+        boolean[][] isQueen = new boolean[8][8]; // 数组效率比哈希表高
+        for (int[] q : queens) {
+            isQueen[q[0]][q[1]] = true;
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int[] d : directions) {
+            int x = king[0] + d[0];
+            int y = king[1] + d[1];
+            while (0 <= x && x < 8 && 0 <= y && y < 8) {
+                if (isQueen[x][y]) {
+                    ans.add(List.of(x, y));
+                    break;
+                }
+                x += d[0];
+                y += d[1];
+            }
+        }
+        return ans;
+    }
+}
+```
+
+* [sol-C++]
+
+```cpp
+class Solution {
+    const int directions[8][2] = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+public:
+    vector<vector<int>> queensAttacktheKing(vector<vector<int>> &queens, vector<int> &king) {
+        bool is_queen[8][8]{}; // 数组效率比哈希表高
+        for (auto &q: queens) {
+            is_queen[q[0]][q[1]] = true;
+        }
+        vector<vector<int>> ans;
+        for (auto &d: directions) {
+            int x = king[0] + d[0];
+            int y = king[1] + d[1];
+            while (0 <= x && x < 8 && 0 <= y && y < 8) {
+                if (is_queen[x][y]) {
+                    ans.push_back({x, y});
+                    break;
+                }
+                x += d[0];
+                y += d[1];
+            }
+        }
+        return ans;
+    }
+};
+```
+
+* [sol-Go]
+
+```go
+func queensAttacktheKing(queens [][]int, king []int) (ans [][]int) {
+    isQueen := [8][8]bool{} // 数组效率比哈希表高
+    for _, q := range queens {
+        isQueen[q[0]][q[1]] = true
+    }
+    directions := [][2]int{{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}}
+    for _, dir := range directions {
+        x := king[0] + dir[0]
+        y := king[1] + dir[1]
+        for 0 <= x && x < 8 && 0 <= y && y < 8 {
+            if isQueen[x][y] {
+                ans = append(ans, []int{x, y})
+                break
+            }
+            x += dir[0]
+            y += dir[1]
+        }
+    }
+    return
+}
+```
+
+* [sol-JavaScript]
+
+```js
+const directions = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
+
+var queensAttacktheKing = function (queens, king) {
+    const isQueen = new Array(8).fill(null).map(() => new Array(8).fill(false));
+    for (const [x, y] of queens) {
+        isQueen[x][y] = true;
+    }
+    const ans = [];
+    for (const [dx, dy] of directions) {
+        let x = king[0] + dx;
+        let y = king[1] + dy;
+        while (0 <= x && x < 8 && 0 <= y && y < 8) {
+            if (isQueen[x][y]) {
+                ans.push([x, y]);
+                break;
+            }
+            x += dx;
+            y += dy;
+        }
+    }
+    return ans;
+};
+```
+
+#### 复杂度分析
+
+- 时间复杂度：$\mathcal{O}(m+n)$。其中 $m$ 为 $\textit{queens}$ 的长度，$n=8$ 为棋盘边长。
+- 空间复杂度：$\mathcal{O}(m)$。
+
+[往期题解精选（按 tag 分类）](https://github.com/EndlessCheng/codeforces-go/blob/master/leetcode/SOLUTIONS.md)
+
+欢迎关注 [B站@灵茶山艾府](https://space.bilibili.com/206214)
