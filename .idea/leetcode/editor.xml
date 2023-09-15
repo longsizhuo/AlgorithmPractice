@@ -25,6 +25,17 @@
             </LeetcodeEditor>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[2596]检查骑士巡视方案.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[2596]检查骑士巡视方案.md" />
+              <option name="frontendQuestionId" value="leetcode.cn2596" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[2596]检查骑士巡视方案.py" />
+              <option name="titleSlug" value="check-knight-tour-configuration" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[630]课程表 III.py">
           <value>
             <LeetcodeEditor>
@@ -77,6 +88,28 @@
               <option name="host" value="leetcode.cn" />
               <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[980]不同路径 III.py" />
               <option name="titleSlug" value="unique-paths-iii" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[剑指 Offer 20]表示数值的字符串.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[剑指 Offer 20]表示数值的字符串.md" />
+              <option name="frontendQuestionId" value="leetcode.cn剑指 Offer 20" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[剑指 Offer 20]表示数值的字符串.py" />
+              <option name="titleSlug" value="biao-shi-shu-zhi-de-zi-fu-chuan-lcof" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[剑指 Offer 67]把字符串转换成整数.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[剑指 Offer 67]把字符串转换成整数.md" />
+              <option name="frontendQuestionId" value="leetcode.cn剑指 Offer 67" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[剑指 Offer 67]把字符串转换成整数.py" />
+              <option name="titleSlug" value="ba-zi-fu-chuan-zhuan-huan-cheng-zheng-shu-lcof" />
             </LeetcodeEditor>
           </value>
         </entry>
