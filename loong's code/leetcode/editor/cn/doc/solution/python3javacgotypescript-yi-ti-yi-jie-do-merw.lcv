@@ -1,0 +1,186 @@
+**方法一：动态规划**
+
+我们定义 $f[i]$ 表示前 $i$ 间房屋能偷窃到的最高总金额，初始时 $f[0]=0$, $f[1]=nums[0]$。
+
+考虑 $i \gt 1$ 的情况，第 $i$ 间房屋有两个选项：
+
+- 不偷窃第 $i$ 间房屋，偷窃总金额为 $f[i-1]$；
+- 偷窃第 $i$ 间房屋，偷窃总金额为 $f[i-2]+nums[i-1]$；
+
+因此，我们可以得到状态转移方程：
+
+$$
+f[i]=
+\begin{cases}
+0, & i=0 \\
+nums[0], & i=1 \\
+\max(f[i-1],f[i-2]+nums[i-1]), & i \gt 1
+\end{cases}
+$$
+
+最终的答案即为 $f[n]$，其中 $n$ 是数组的长度。
+
+* [sol1-Python3]
+
+```python
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        f = [0] * (n + 1)
+        f[1] = nums[0]
+        for i in range(2, n + 1):
+            f[i] = max(f[i - 1], f[i - 2] + nums[i - 1])
+        return f[n]
+```
+
+* [sol1-Java]
+
+```java
+class Solution {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        int[] f = new int[n + 1];
+        f[1] = nums[0];
+        for (int i = 2; i <= n; ++i) {
+            f[i] = Math.max(f[i - 1], f[i - 2] + nums[i - 1]);
+        }
+        return f[n];
+    }
+}
+```
+
+* [sol1-C++]
+
+```cpp
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        int f[n + 1];
+        memset(f, 0, sizeof(f));
+        f[1] = nums[0];
+        for (int i = 2; i <= n; ++i) {
+            f[i] = max(f[i - 1], f[i - 2] + nums[i - 1]);
+        }
+        return f[n];
+    }
+};
+```
+
+* [sol1-Go]
+
+```go
+func rob(nums []int) int {
+	n := len(nums)
+	f := make([]int, n+1)
+	f[1] = nums[0]
+	for i := 2; i <= n; i++ {
+		f[i] = max(f[i-1], f[i-2]+nums[i-1])
+	}
+	return f[n]
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+```
+
+* [sol1-TypeScript]
+
+```ts
+function rob(nums: number[]): number {
+    const n = nums.length;
+    const f: number[] = Array(n + 1).fill(0);
+    f[1] = nums[0];
+    for (let i = 2; i <= n; ++i) {
+        f[i] = Math.max(f[i - 1], f[i - 2] + nums[i - 1]);
+    }
+    return f[n];
+}
+```
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 是数组长度。
+
+注意到当 $i \gt 2$ 时，$f[i]$ 只和 $f[i-1]$ 与 $f[i-2]$ 有关，因此我们可以使用两个变量代替数组，将空间复杂度降到 $O(1)$。
+
+* [sol2-Python3]
+
+```python
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        f = g = 0
+        for x in nums:
+            f, g = max(f, g), f + x
+        return max(f, g)
+```
+
+* [sol2-Java]
+
+```java
+class Solution {
+    public int rob(int[] nums) {
+        int f = 0, g = 0;
+        for (int x : nums) {
+            int ff = Math.max(f, g);
+            g = f + x;
+            f = ff;
+        }
+        return Math.max(f, g);
+    }
+}
+```
+
+* [sol2-C++]
+
+```cpp
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int f = 0, g = 0;
+        for (int& x : nums) {
+            int ff = max(f, g);
+            g = f + x;
+            f = ff;
+        }
+        return max(f, g);
+    }
+};
+```
+
+* [sol2-Go]
+
+```go
+func rob(nums []int) int {
+	f, g := 0, 0
+	for _, x := range nums {
+		f, g = max(f, g), f+x
+	}
+	return max(f, g)
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+```
+
+* [sol2-TypeScript]
+
+```ts
+function rob(nums: number[]): number {
+    let [f, g] = [0, 0];
+    for (const x of nums) {
+        [f, g] = [Math.max(f, g), f + x];
+    }
+    return Math.max(f, g);
+}
+```
+
+---
+
+有任何问题，欢迎评论区交流，欢迎评论区提供其它解题思路（代码），也可以点个赞支持一下作者哈😄~

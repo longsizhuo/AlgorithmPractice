@@ -1,0 +1,120 @@
+**方法一：动态规划**
+
+环状排列意味着第一个房屋和最后一个房屋中最多只能选择一个偷窃，因此可以把此环状排列房间问题约化为两个单排排列房屋子问题。
+
+* [sol1-Python3]
+
+```python
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        def _rob(nums):
+            f = g = 0
+            for x in nums:
+                f, g = max(f, g), f + x
+            return max(f, g)
+
+        if len(nums) == 1:
+            return nums[0]
+        return max(_rob(nums[1:]), _rob(nums[:-1]))
+```
+
+* [sol1-Java]
+
+```java
+class Solution {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if (n == 1) {
+            return nums[0];
+        }
+        return Math.max(rob(nums, 0, n - 2), rob(nums, 1, n - 1));
+    }
+
+    private int rob(int[] nums, int l, int r) {
+        int f = 0, g = 0;
+        for (; l <= r; ++l) {
+            int ff = Math.max(f, g);
+            g = f + nums[l];
+            f = ff;
+        }
+        return Math.max(f, g);
+    }
+}
+```
+
+* [sol1-C++]
+
+```cpp
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        if (n == 1) {
+            return nums[0];
+        }
+        return max(robRange(nums, 0, n - 2), robRange(nums, 1, n - 1));
+    }
+
+    int robRange(vector<int>& nums, int l, int r) {
+        int f = 0, g = 0;
+        for (; l <= r; ++l) {
+            int ff = max(f, g);
+            g = f + nums[l];
+            f = ff;
+        }
+        return max(f, g);
+    }
+};
+```
+
+* [sol1-Go]
+
+```go
+func rob(nums []int) int {
+	n := len(nums)
+	if n == 1 {
+		return nums[0]
+	}
+	return max(robRange(nums, 0, n-2), robRange(nums, 1, n-1))
+}
+
+func robRange(nums []int, l, r int) int {
+	f, g := 0, 0
+	for _, x := range nums[l : r+1] {
+		f, g = max(f, g), f+x
+	}
+	return max(f, g)
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+```
+
+* [sol1-TypeScript]
+
+```ts
+function rob(nums: number[]): number {
+    const n = nums.length;
+    if (n === 1) {
+        return nums[0];
+    }
+    const robRange = (l: number, r: number): number => {
+        let [f, g] = [0, 0];
+        for (; l <= r; ++l) {
+            [f, g] = [Math.max(f, g), f + nums[l]];
+        }
+        return Math.max(f, g);
+    };
+    return Math.max(robRange(0, n - 2), robRange(1, n - 1));
+}
+```
+
+时间复杂度 $O(n)$，其中 $n$ 是数组长度。空间复杂度 $O(1)$。
+
+---
+
+有任何问题，欢迎评论区交流，欢迎评论区提供其它解题思路（代码），也可以点个赞支持一下作者哈😄~

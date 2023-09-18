@@ -1,0 +1,121 @@
+## 视频讲解
+
+前置题目：[198. 打家劫舍](https://leetcode.cn/problems/house-robber/)
+
+视频讲解：[从记忆化搜索到递推【基础算法精讲 17】](https://b23.tv/pc522x3)，制作不易，欢迎点赞！
+
+## 思路
+
+分类讨论，考虑是否偷 $\textit{nums}[0]$：
+
+- 如果偷 $\textit{nums}[0]$，那么 $\textit{nums}[1]$ 和 $\textit{nums}[n-1]$ 不能偷，问题变成从 $\textit{nums}[2]$ 到 $\textit{nums}[n-2]$ 的非环形版本，调用 198 题的代码解决；
+- 如果不偷 $\textit{nums}[0]$，那么问题变成从 $\textit{nums}[1]$ 到 $\textit{nums}[n-1]$ 的非环形版本，同样调用 198 题的代码解决。
+
+这两种方案覆盖了所有情况（毕竟 $\textit{nums}[0]$ 只有偷与不偷，没有第三种选择），所以取两种方案的最大值，即为答案。
+
+把我在 198 写的 [代码](https://leetcode.cn/problems/house-robber/solution/ru-he-xiang-chu-zhuang-tai-ding-yi-he-zh-1wt1/) 复制过来即可，这里用空间优化的代码。
+
+* [sol3-Python3]
+
+```py
+class Solution:
+    # 198. 打家劫舍
+    def rob1(self, nums: List[int]) -> int:
+        f0 = f1 = 0
+        for x in nums:
+            f0, f1 = f1, max(f1, f0 + x)
+        return f1
+
+    def rob(self, nums: List[int]) -> int:
+        return max(nums[0] + self.rob1(nums[2:-1]), self.rob1(nums[1:]))
+```
+
+* [sol3-Java]
+
+```java
+class Solution {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        return Math.max(nums[0] + rob1(nums, 2, n - 1), rob1(nums, 1, n));
+    }
+    
+    // 198. 打家劫舍
+    private int rob1(int[] nums, int start, int end) { // [start,end) 左闭右开
+        int f0 = 0, f1 = 0;
+        for (int i = start; i < end; ++i) {
+            int newF = Math.max(f1, f0 + nums[i]);
+            f0 = f1;
+            f1 = newF;
+        }
+        return f1;
+    }
+}
+```
+
+* [sol3-C++]
+
+```cpp
+class Solution {
+    // 198. 打家劫舍
+    int rob1(vector<int> &nums, int start, int end) { // [start,end) 左闭右开
+        int f0 = 0, f1 = 0;
+        for (int i = start; i < end; ++i) {
+            int new_f = max(f1, f0 + nums[i]);
+            f0 = f1;
+            f1 = new_f;
+        }
+        return f1;
+    }
+
+public:
+    int rob(vector<int> &nums) {
+        int n = nums.size();
+        return max(nums[0] + rob1(nums, 2, n - 1), rob1(nums, 1, n));
+    }
+};
+```
+
+* [sol3-Go]
+
+```go
+// 198. 打家劫舍
+func rob1(nums []int, start, end int) int { // [start,end) 左闭右开
+    f0, f1 := 0, 0
+    for i := start; i < end; i++ {
+        f0, f1 = f1, max(f1, f0+nums[i])
+    }
+    return f1
+}
+
+func rob(nums []int) int {
+    n := len(nums)
+    return max(nums[0]+rob1(nums, 2, n-1), rob1(nums, 1, n))
+}
+
+func max(a, b int) int { if b > a { return b }; return a }
+```
+
+* [sol3-JavaScript]
+
+```js
+// 198. 打家劫舍
+var rob1 = function (nums) {
+    let f0 = 0, f1 = 0;
+    for (const x of nums) {
+        [f0, f1] = [f1, Math.max(f1, f0 + x)]
+    }
+    return f1;
+};
+
+var rob = function (nums) {
+    const n = nums.length;
+    return Math.max(nums[0] + rob1(nums.slice(2, n - 1)), rob1(nums.slice(1)))
+};
+```
+
+### 复杂度分析
+
+- 时间复杂度：$\mathcal{O}(n)$。其中 $n$ 为 $\textit{nums}$ 的长度。
+- 空间复杂度：$\mathcal{O}(1)$。仅用到若干额外变量。为了写起来方便，Python 和 JS 使用了切片（忽略带来的空间），不使用切片的写法请参考其它语言。
+
+[往期题解精选（按 tag 分类）](https://github.com/EndlessCheng/codeforces-go/blob/master/leetcode/SOLUTIONS.md)
