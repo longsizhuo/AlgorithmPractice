@@ -1,0 +1,106 @@
+**方法一：分类讨论**
+
+如果 $money \lt children$，那么一定存在儿童没有分到钱，返回 $-1$。
+
+如果 $money \gt 8 \times children$，那么有 $children-1$ 个儿童获得了 $8$ 美元，剩下的一个儿童获得了 $money - 8 \times (children-1)$ 美元，返回 $children-1$。
+
+如果 $money = 8 \times children - 4$，那么有 $children-2$ 个儿童获得了 $8$ 美元，剩下的两个儿童分摊剩下的 $12$ 美元（只要不是 $4$, $8$ 美元就行），返回 $children-2$。
+
+如果，我们假设有 $x$ 个儿童获得了 $8$ 美元，那么剩下的钱为 $money- 8 \times x$，只要保证大于等于剩下的儿童数 $children-x$，就可以满足题意。因此，我们只需要求出 $x$ 的最大值，即为答案。
+
+* [sol1-Python3]
+
+```python
+class Solution:
+    def distMoney(self, money: int, children: int) -> int:
+        if money < children:
+            return -1
+        if money > 8 * children:
+            return children - 1
+        if money == 8 * children - 4:
+            return children - 2
+        # money-8x >= children-x, x <= (money-children)/7
+        return (money - children) // 7
+```
+
+* [sol1-Java]
+
+```java
+class Solution {
+    public int distMoney(int money, int children) {
+        if (money < children) {
+            return -1;
+        }
+        if (money > 8 * children) {
+            return children - 1;
+        }
+        if (money == 8 * children - 4) {
+            return children - 2;
+        }
+        // money-8x >= children-x, x <= (money-children)/7
+        return (money - children) / 7;
+    }
+}
+```
+
+* [sol1-C++]
+
+```cpp
+class Solution {
+public:
+    int distMoney(int money, int children) {
+        if (money < children) {
+            return -1;
+        }
+        if (money > 8 * children) {
+            return children - 1;
+        }
+        if (money == 8 * children - 4) {
+            return children - 2;
+        }
+        // money-8x >= children-x, x <= (money-children)/7
+        return (money - children) / 7;
+    }
+};
+```
+
+* [sol1-Go]
+
+```go
+func distMoney(money int, children int) int {
+	if money < children {
+		return -1
+	}
+	if money > 8*children {
+		return children - 1
+	}
+	if money == 8*children-4 {
+		return children - 2
+	}
+	// money-8x >= children-x, x <= (money-children)/7
+	return (money - children) / 7
+}
+```
+
+* [sol1-TypeScript]
+
+```ts
+function distMoney(money: number, children: number): number {
+    if (money < children) {
+        return -1;
+    }
+    if (money > 8 * children) {
+        return children - 1;
+    }
+    if (money === 8 * children - 4) {
+        return children - 2;
+    }
+    return Math.floor((money - children) / 7);
+}
+```
+
+时间复杂度 $O(1)$，空间复杂度 $O(1)$。
+
+---
+
+有任何问题，欢迎评论区交流，欢迎评论区提供其它解题思路（代码），也可以点个赞支持一下作者哈😄~
