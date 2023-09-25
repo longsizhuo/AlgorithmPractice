@@ -1,0 +1,80 @@
+> Problem: [460. LFU 缓存](https://leetcode.cn/problems/lfu-cache/description/)
+
+# 思路
+
+可以使用Python字典和双向链表
+
+# 复杂度
+
+1. 时间复杂度：
+
+   - Get操作：在字典中查找键的值是O(1)的操作，同时更新使用频率也是O(1)，因此Get操作的平均时间复杂度为O(1)。
+   - Put操作：Put操作也是O(1)的平均时间复杂度，因为字典的插入和更新操作都是O(1)的。
+2. 空间复杂度：
+   - LFUCache结构体的空间复杂度为O(1)，因为其成员变量数量是固定的。
+   - keyToValue字典用于存储键值对，最多包含capacity个元素，因此空间复杂度为O(capacity)。
+   - keyToFreq字典用于存储键的使用频率，最多包含capacity个元素，因此空间复杂度为O(capacity)。
+   - freqToKeys字典用于存储每个使用频率对应的键集合，最多包含capacity个元素，因此空间复杂度为O(capacity)。
+   - 综合考虑，LFUCache的总空间复杂度为O(capacity)。
+
+# Code
+
+* []
+
+```Python
+
+class LFUCache:
+
+def __init__(self, capacity: int):
+    self.capacity = capacity
+    self.key_to_value = {}  # 保存键到值的映射
+    self.key_to_freq = {}   # 保存键到使用频率的映射
+    self.freq_to_keys = defaultdict(OrderedDict)  # 保存使用频率到键的映射，使用OrderedDict来维护顺序
+    self.min_freq = 0       # 记录最小的使用频率
+
+def get(self, key: int) -> int:
+    if key in self.key_to_value:
+        # 如果键存在，更新使用频率
+        self.key_to_freq[key] += 1
+        freq = self.key_to_freq[key]
+        # 将键从旧的频率列表中移除，并添加到新的频率列表中
+        del self.freq_to_keys[freq - 1][key]
+        self.freq_to_keys[freq][key] = None
+        # 如果旧频率列表为空，更新最小频率
+        if not self.freq_to_keys[freq - 1]:
+            if freq - 1 == self.min_freq:
+                self.min_freq += 1
+        return self.key_to_value[key]
+    else:
+        return -1
+
+def put(self, key: int, value: int) -> None:
+    if self.capacity == 0:
+        return
+
+    if key in self.key_to_value:
+        # 如果键已存在，更新值和使用频率
+        self.key_to_value[key] = value
+        self.key_to_freq[key] += 1
+        freq = self.key_to_freq[key]
+        # 移除旧频率列表中的键，添加到新频率列表中
+        del self.freq_to_keys[freq - 1][key]
+        self.freq_to_keys[freq][key] = None
+        # 如果旧频率列表为空，更新最小频率
+        if not self.freq_to_keys[freq - 1]:
+            if freq - 1 == self.min_freq:
+                self.min_freq += 1
+    else:
+        # 如果缓存已满，移除最不经常使用的键
+        if len(self.key_to_value) >= self.capacity:
+            # 获取最小频率列表的第一个键，并移除它
+            evict_key, _ = self.freq_to_keys[self.min_freq].popitem(last=False)
+            del self.key_to_value[evict_key]
+            del self.key_to_freq[evict_key]
+        # 添加新键到字典中，初始化使用频率为1，加入频率为1的列表中
+        self.key_to_value[key] = value
+        self.key_to_freq[key] = 1
+        self.freq_to_keys[1][key] = None
+        self.min_freq = 1
+```
+

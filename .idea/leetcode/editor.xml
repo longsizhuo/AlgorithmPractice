@@ -14,6 +14,17 @@
             </LeetcodeEditor>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[146]LRU 缓存.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[146]LRU 缓存.md" />
+              <option name="frontendQuestionId" value="leetcode.cn146" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[146]LRU 缓存.py" />
+              <option name="titleSlug" value="lru-cache" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[198]打家劫舍.py">
           <value>
             <LeetcodeEditor>

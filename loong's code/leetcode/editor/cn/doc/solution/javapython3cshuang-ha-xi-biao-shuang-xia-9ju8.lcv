@@ -1,0 +1,425 @@
+对 [官解]() 的理解与补充
+
+# 题目
+
+## 460. LFU 缓存
+
+请你为 [最不经常使用（LFU）](https://baike.baidu.com/item/%E7%BC%93%E5%AD%98%E7%AE%97%E6%B3%95) 缓存算法设计并实现数据结构。
+
+实现 `LFUCache` 类：
+
+- `LFUCache(int capacity)` - 用数据结构的容量 `capacity` 初始化对象
+- `int get(int key)` - 如果键 `key` 存在于缓存中，则获取键的值，否则返回 `-1` 。
+- `void put(int key, int value)` - 如果键 `key` 已存在，则变更其值；如果键不存在，请插入键值对。当缓存达到其容量 `capacity` 时，则应该在插入新项之前，移除最不经常使用的项。在此问题中，当存在平局（即两个或更多个键具有相同使用频率）时，应该去除 **最久未使用** 的键。
+
+为了确定最不常使用的键，可以为缓存中的每个键维护一个 **使用计数器** 。使用计数最小的键是最久未使用的键。
+
+当一个键首次插入到缓存中时，它的使用计数器被设置为 `1` (由于 `put` 操作)。对缓存中的键执行 `get` 或 `put` 操作，使用计数器的值将会递增。
+
+函数 `ge`t 和 `put` 必须以 `O(1)` 的平均时间复杂度运行。
+
+# 题目分析
+
+这道题是一个数据结构的设计题。要求维护一个有一定容量 `capacity` 的空间来存放键值对。当缓存达到上限时，首先应该移除使用频次最少的键值对。如果有多个使用频次最少的键值对，则移除那个最久未使用的。
+
+这道题的关键点还是在于当达到容量上限时，如何快速找到要淘汰的键值对。
+
+首先我们考虑，如果说每个频次的键值对都只有一个的话，那么我们是需要使用哈希表记录每个键值对的频次并维护最小频次 `minFreq` 即可。
+但是每个频次肯定不会只有一个键值对，那么哈希表的键是频次，值就应该是一个存放若干个键值对的数据结构。这个数据结构是什么呢？
+
+由于最小频次的键值对不止一个时，我们应该移除最久未使用的那个键值对。根据 [LRU](https://leetcode.cn/problems/lru-cache/solutions/2419099/javapython3cha-xi-biao-shuang-xiang-lian-w6qq/) 的构造原理，挑选出最久未使用的键值对可以使用 **双向链表** 来存储键值对。
+
+由此我们可以确定构造 `LFU` 要使用的数据结构：
+- 一个储存 **频次和属于这个频次的键值对构成的双向链表** 的哈希表 `freqQueue` ；
+- 一个储存 **键和对应的节点** 的哈希表 `nodeMap`【这是双向链表快速获取最久未使用节点所需要的】
+
+由于我们使用哈希表对频次进行记录，哈希表是无序的，为了快速得到当前缓存中键值对的最小频次，我们还需要一个变量 `minFreq` 对其进行维护。
+
+此时我们来看如何对这几个变量进行维护：
+- 当已存在的键值对被使用（无论是`get`还是`put`），其频次都增加`1`，那么我们需要将这个键值对对应的节点**从当前频次对应的链表中剔除**，同时**加入到当前频次 + 1 对应的链表当中**；
+
+  ![image.png](https://pic.leetcode.cn/1695651458-dYVaoM-image.png)
+
+  - 一旦有键值对的频次发生改变，就要 **关注 `minFreq` 是否会改变**。此时发生的动作是键值对当前频次 `freq` 所维护的键值对少一个。那么如果这个键值对恰好是 `freq` 维护的最后一个节点，则缓存中没有键值对的频次为 `freq` 。如果 `freq` 恰好为最小频次 `minFreq`，那么 **`minFreq` 就应该变为 `freq + 1`**。【`freq + 1`一定至少有当前使用的键值对】
+
+    ![image.png](https://pic.leetcode.cn/1695651633-XqGhOv-image.png)
+
+- 当加入一个新的键值对时，其频次为 `1`，加入频次为 `1` 所维护的链表中。
+  - 此时**最小频次就一定为 `1`**。【没有比 `1` 更小的频次】
+
+    ![image.png](https://pic.leetcode.cn/1695651855-sTacYp-image.png)
+
+  - 当加入一个新的键值对且缓存空间达到上限时，只需要获取最小频率对应的链表，移除其头节点即为最久未使用的键值对。
+
+当我们定义链表节点 `ListNode` 时， 其属性应该包括键`key`, 值`value`以及频次`freq`。当我们通过键和哈希表获取到节点时，就可以得到这个键值对的所有信息。【即把**键值对的所有信息都作为节点的属性进行存储**。】
+
+# 代码
+
+* []
+
+```Java
+class LFUCache {
+    Map<Integer, MyQueue> freqQueue;    // 频次队列映射表，频率相同的节点用双向链表存储
+    Map<Integer, ListNode> nodeMap;     // 关键字节点映射表，存储每个key映射的节点
+    int capacity;   // 最大容量
+    int minFreq = 0;    // 当前缓存中的最小频次
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        freqQueue = new HashMap<>();
+        nodeMap = new HashMap<>();
+    }
+    
+    public int get(int key) {
+        if(!nodeMap.containsKey(key)){
+            return -1;  // 键不存在，直接返回-1
+        }
+        return updateKeyFreq(key).val;  // 键存在，键使用次数更新，并返回其值
+    }
+    
+    public void put(int key, int value) {
+        if(nodeMap.containsKey(key)){
+            updateKeyFreq(key).val = value; // 键存在，使用次数更新，值更新
+        }else{
+            if(nodeMap.size() == capacity){
+                // 键不存在且缓存容量达到上限，移除最小频次中最久未使用的节点
+                int outKey = freqQueue.get(minFreq).removeHead();
+                nodeMap.remove(outKey);
+            }
+            // 键不存在，加入键
+            ListNode node = updateKeyFreq(key);
+            node.val = value;
+            nodeMap.put(key, node);
+        }
+    }
+
+    /**
+     * 更新key的频次，并返回key对应的节点
+     */
+    private ListNode updateKeyFreq(int key){
+        ListNode node = nodeMap.getOrDefault(key, new ListNode(key));   // 获取key对应的节点，新key创建节点
+        if(node.freq > 0){
+            // 已有的key，将它从其当前频次的双向链表中移除
+            MyQueue queue = freqQueue.get(node.freq);
+            queue.removeNode(node);
+            if(queue.isEmpty() && minFreq == node.freq){
+                minFreq++;  // 当前频次没有节点且最小频次为这个频次，说明最小频次发生改变，增大1
+            }
+        }else{
+            minFreq = 1;    // 新节点加入，最小频次一定为1
+        }
+        node.freq++;    // 节点频次增加
+        // 将节点加入其更新后的频次的队列中
+        MyQueue nextQueue = freqQueue.getOrDefault(node.freq, new MyQueue());
+        nextQueue.addToTail(node);
+        freqQueue.put(node.freq, nextQueue);
+        return node;
+    }
+}
+
+/**
+ * 双向链表
+ */
+class MyQueue{
+    ListNode head;  // 双向链表的头定位节点，用于定位实际的头节点
+    ListNode tail;  // 双向链表的尾定位节点，用于定位实际的尾节点
+
+    public MyQueue(){
+        head = new ListNode();  // 初始化头定位节点
+        tail = new ListNode();  // 初始化尾定位节点
+        head.next = tail;   // 初始时，头定位节点和尾定位节点互相连接
+        tail.pre = head;
+    }
+
+    /**
+     * 判断链表是否为空
+     */
+    public boolean isEmpty(){
+        return head.next == tail;
+    }
+
+    /**
+     * 将给定节点node添加到链表尾部，即将node插入到tail之前
+     */
+    public void addToTail(ListNode node){
+        tail.pre.next = node;   // 获取原本的尾节点tail.pre，建立其和node的连接
+        node.pre = tail.pre;    
+        node.next= tail;    // 建立node和tail的连接
+        tail.pre = node;
+    }
+
+    /**
+     * 移除当前头节点，并返回头节点的值
+     */
+    public int removeHead(){
+        if(head.next == tail)return -1; // 头节点不存在，返回-1
+        int headKey = head.next.key;    // 获取头节点的值
+        removeNode(head.next);  // 删除头节点
+        return headKey;
+    }
+
+    /**
+     * 从链表中删除给定节点
+     */
+    public void removeNode(ListNode node){
+        node.pre.next = node.next;  // node的上一个节点和下一个节点建立联系
+        node.next.pre = node.pre;
+    }
+
+}
+
+/**
+ * 双向链表节点
+ */
+class ListNode{
+    int key;    // 键
+    int val;    // 值
+    int freq = 0;   // 使用次数
+    ListNode pre;   // 上一个节点
+    ListNode next;  // 下一个节点
+
+    public ListNode(){}
+    public ListNode(int key){this.key=key;}
+    public ListNode(int key, int value){
+        this.key = key;
+        this.val = value;
+    }
+}
+
+```
+
+* []
+
+```Python
+"""
+双向链表节点
+"""
+class ListNode:
+
+    def __init__(self, key: int = 0, val: int = 0):
+        self.key = key
+        self.val = val
+        self.freq = 0
+        self.pre = None
+        self.next = None
+        
+"""
+双向链表
+"""
+class MyQueue:
+
+    def __init__(self):
+        self.head = ListNode()  # 双向链表的头定位节点，用于定位实际的头节点
+        self.tail = ListNode()  # 双向链表的尾定位节点，用于定位实际的尾节点
+        self.head.next = self.tail   # 初始时，头定位节点和尾定位节点互相连接
+        self.tail.pre = self.head
+
+    """
+    判断链表是否为空
+    """
+    def is_empty(self) -> bool:
+        return self.head.next == self.tail
+
+    """
+    将给定节点node添加到链表尾部，即将node插入到tail之前
+    """
+    def addToTail(self, node: ListNode):
+        self.tail.pre.next = node   # 获取原本的尾节点tail.pre，建立其和node的连接
+        node.pre = self.tail.pre    
+        node.next= self.tail    # 建立node和tail的连接
+        self.tail.pre = node
+
+    """
+    移除当前头节点，并返回头节点的值
+    """
+    def removeHead(self) -> int:
+        if self.head.next == self.tail: return -1 # 头节点不存在，返回-1
+        headKey = self.head.next.key    # 获取头节点的值
+        self.removeNode(self.head.next)  # 删除头节点
+        return headKey
+
+    """
+    从链表中删除给定节点
+    """
+    def removeNode(self, node: ListNode):
+        node.pre.next = node.next  # node的上一个节点和下一个节点建立联系
+        node.next.pre = node.pre
+
+class LFUCache:
+
+    def __init__(self, capacity: int):
+        self.freqQueue = {}    # 频次队列映射表，频率相同的节点用双向链表存储
+        self.nodeMap = {}     # 关键字节点映射表，存储每个key映射的节点
+        self.capacity = capacity   # 最大容量
+        self.minFreq = 0    # 当前缓存中的最小频次
+
+    def get(self, key: int) -> int:
+        if key not in self.nodeMap:
+            return -1  # 键不存在，直接返回-1
+        return self.updateKeyFreq(key).val  # 键存在，键使用次数更新，并返回其值
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.nodeMap:
+            self.updateKeyFreq(key).val = value # 键存在，使用次数更新，值更新
+        else:
+            if len(self.nodeMap) == self.capacity:
+                # 键不存在且缓存容量达到上限，移除最小频次中最久未使用的节点
+                outKey = self.freqQueue[self.minFreq].removeHead()
+                print(outKey)
+                self.nodeMap.pop(outKey)
+            # 键不存在，加入键
+            node = self.updateKeyFreq(key)
+            node.val = value
+            self.nodeMap[key] = node
+
+    """
+    更新key的频次，并返回key对应的节点
+    """
+    def updateKeyFreq(self, key: int) -> ListNode:
+        node = self.nodeMap.get(key, ListNode(key))   # 获取key对应的节点，新key创建节点
+        if node.freq > 0:
+            # 已有的key，将它从其当前频次的双向链表中移除
+            queue =self.freqQueue[node.freq]
+            queue.removeNode(node)
+            if queue.is_empty() and self.minFreq == node.freq:
+                self.minFreq += 1  # 当前频次没有节点且最小频次为这个频次，说明最小频次发生改变，增大1
+        else:
+            self.minFreq = 1    # 新节点加入，最小频次一定为1
+        node.freq += 1    # 节点频次增加
+        # 将节点加入其更新后的频次的队列中
+        nextQueue = self.freqQueue.get(node.freq, MyQueue())
+        nextQueue.addToTail(node)
+        self.freqQueue[node.freq] = nextQueue
+        return node
+```
+
+* []
+
+```C++
+/**
+ * 双向链表节点
+ */
+class MyListNode{
+public:
+    int key;    // 键
+    int val;    // 值
+    int freq = 0;   // 使用次数
+    MyListNode* pre;   // 上一个节点
+    MyListNode* next;  // 下一个节点
+
+    MyListNode(): key(0), val(0), pre(nullptr), next(nullptr){}
+    MyListNode(int _key): key(_key), val(0), pre(nullptr), next(nullptr){}
+    MyListNode(int _key, int _val): key(_key), val(_val), pre(nullptr), next(nullptr){}
+};
+
+/**
+ * 双向链表
+ */
+class MyQueue{
+public:
+    MyListNode* head;  // 双向链表的头定位节点，用于定位实际的头节点
+    MyListNode* tail;  // 双向链表的尾定位节点，用于定位实际的尾节点
+
+    MyQueue(){
+        this->head = new MyListNode();  // 初始化头定位节点
+        this->tail = new MyListNode();  // 初始化尾定位节点
+        this->head->next = this->tail;   // 初始时，头定位节点和尾定位节点互相连接
+        this->tail->pre = this->head;
+    }
+
+    /**
+     * 判断链表是否为空
+     */
+    bool isEmpty(){
+        return this->head->next == this->tail;
+    }
+
+    /**
+     * 将给定节点node添加到链表尾部，即将node插入到tail之前
+     */
+    void addToTail(MyListNode* node){
+        this->tail->pre->next = node;   // 获取原本的尾节点tail->pre，建立其和node的连接
+        node->pre = this->tail->pre;    
+        node->next= this->tail;    // 建立node和tail的连接
+        this->tail->pre = node;
+    }
+
+    /**
+     * 移除当前头节点，并返回头节点的值
+     */
+    int removeHead(){
+        if(this->head->next == tail)return -1; // 头节点不存在，返回-1
+        int headKey = this->head->next->key;    // 获取头节点的值
+        removeNode(this->head->next);  // 删除头节点
+        return headKey;
+    }
+
+    /**
+     * 从链表中删除给定节点
+     */
+    void removeNode(MyListNode* node){
+        node->pre->next = node->next;  // node的上一个节点和下一个节点建立联系
+        node->next->pre = node->pre;
+    }
+
+};
+
+class LFUCache {
+private:
+    unordered_map<int, MyQueue*> freqQueue;    // 频次队列映射表，频率相同的节点用双向链表存储
+    unordered_map<int, MyListNode*> nodeMap;     // 关键字节点映射表，存储每个key映射的节点
+    int capacity;   // 最大容量
+    int minFreq = 0;    // 当前缓存中的最小频次
+
+    MyListNode* updateKeyFreq(int key){
+        MyListNode* node = nodeMap.count(key) ? nodeMap[key] : new MyListNode(key);   // 获取key对应的节点，新key创建节点
+        if(node->freq > 0){
+            // 已有的key，将它从其当前频次的双向链表中移除
+            MyQueue* queue = freqQueue[node->freq];
+            queue->removeNode(node);
+            if(queue->isEmpty() && minFreq == node->freq){
+                minFreq++;  // 当前频次没有节点且最小频次为这个频次，说明最小频次发生改变，增大1
+            }
+        }else{
+            minFreq = 1;    // 新节点加入，最小频次一定为1
+        }
+        node->freq++;    // 节点频次增加
+        // 将节点加入其更新后的频次的队列中
+        MyQueue* nextQueue = freqQueue.count(node->freq) ? freqQueue[node->freq] : new MyQueue();
+        nextQueue->addToTail(node);
+        freqQueue[node->freq] = nextQueue;
+        return node;
+    }
+
+public:
+    LFUCache(int capacity) {
+        this->capacity = capacity;
+    }
+    
+    int get(int key) {
+        if(!nodeMap.count(key)){
+            return -1;  // 键不存在，直接返回-1
+        }
+        return updateKeyFreq(key)->val;  // 键存在，键使用次数更新，并返回其值
+    }
+    
+    void put(int key, int value) {
+        if(nodeMap.count(key)){
+            updateKeyFreq(key)->val = value; // 键存在，使用次数更新，值更新
+        }else{
+            if(nodeMap.size() == capacity){
+                // 键不存在且缓存容量达到上限，移除最小频次中最久未使用的节点
+                int outKey = freqQueue[minFreq]->removeHead();
+                nodeMap.erase(outKey);
+            }
+            // 键不存在，加入键
+            MyListNode* node = updateKeyFreq(key);
+            node->val = value;
+            nodeMap[key] = node;
+        }
+    }
+};
+
+
+```
+
