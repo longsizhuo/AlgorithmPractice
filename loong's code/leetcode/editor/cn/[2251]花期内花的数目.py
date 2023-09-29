@@ -40,13 +40,16 @@
 #  
 # 
 #  Related Topics 数组 哈希表 二分查找 有序集合 前缀和 排序 👍 103 👎 0
-from bisect import bisect_right
+from bisect import bisect_right, bisect_left
+from typing import List
 
 
 # leetcode submit region begin(Prohibit modification and deletion)
 class Solution:
     def fullBloomFlowers(self, flowers: List[List[int]], people: List[int]) -> List[int]:
         start, end = sorted(a for a, _ in flowers), sorted(b for _, b in flowers)
+        # 计算该人之前有多少个开始-有多少个结束
         return [bisect_right(start, p) - bisect_left(end, p) for p in people]
 
 # leetcode submit region end(Prohibit modification and deletion)
+print(Solution().fullBloomFlowers(flowers = [[1,6],[3,7],[9,12],[4,13]], people = [2,3,7,11]))

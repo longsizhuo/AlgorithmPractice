@@ -157,6 +157,17 @@
             </LeetcodeEditor>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[605]种花问题.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[605]种花问题.md" />
+              <option name="frontendQuestionId" value="leetcode.cn605" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[605]种花问题.py" />
+              <option name="titleSlug" value="can-place-flowers" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[630]课程表 III.py">
           <value>
             <LeetcodeEditor>
