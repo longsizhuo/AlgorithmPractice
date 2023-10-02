@@ -3,6 +3,17 @@
   <component name="LeetcodeEditor">
     <option name="projectConfig">
       <map>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[121]买卖股票的最佳时机.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[121]买卖股票的最佳时机.md" />
+              <option name="frontendQuestionId" value="leetcode.cn121" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[121]买卖股票的最佳时机.py" />
+              <option name="titleSlug" value="best-time-to-buy-and-sell-stock" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[1222]可以攻击国王的皇后.py">
           <value>
             <LeetcodeEditor>
@@ -11,6 +22,17 @@
               <option name="host" value="leetcode.cn" />
               <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[1222]可以攻击国王的皇后.py" />
               <option name="titleSlug" value="queens-that-can-attack-the-king" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[122]买卖股票的最佳时机 II.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[122]买卖股票的最佳时机 II.md" />
+              <option name="frontendQuestionId" value="leetcode.cn122" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[122]买卖股票的最佳时机 II.py" />
+              <option name="titleSlug" value="best-time-to-buy-and-sell-stock-ii" />
             </LeetcodeEditor>
           </value>
         </entry>
@@ -66,6 +88,17 @@
               <option name="host" value="leetcode.cn" />
               <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[2050]并行课程 III.py" />
               <option name="titleSlug" value="parallel-courses-iii" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[2136]全部开花的最早一天.py">
+          <value>
+            <LeetcodeEditor>
+              <option name="contentPath" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/doc/content/[2136]全部开花的最早一天.md" />
+              <option name="frontendQuestionId" value="leetcode.cn2136" />
+              <option name="host" value="leetcode.cn" />
+              <option name="path" value="$PROJECT_DIR$/loong's code/leetcode/editor/cn/[2136]全部开花的最早一天.py" />
+              <option name="titleSlug" value="earliest-possible-day-of-full-bloom" />
             </LeetcodeEditor>
           </value>
         </entry>
