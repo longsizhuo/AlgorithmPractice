@@ -1,0 +1,119 @@
+**方法一：模拟**
+
+从数组两端开始，每次取出一个元素，将其与另一个元素拼接，然后将拼接后的结果加到答案中。重复这个过程，直到数组为空。
+
+* [sol1-Python3]
+
+```python
+class Solution:
+    def findTheArrayConcVal(self, nums: List[int]) -> int:
+        ans = 0
+        i, j = 0, len(nums) - 1
+        while i < j:
+            ans += int(str(nums[i]) + str(nums[j]))
+            i, j = i + 1, j - 1
+        if i == j:
+            ans += nums[i]
+        return ans
+```
+
+* [sol1-Java]
+
+```java
+class Solution {
+    public long findTheArrayConcVal(int[] nums) {
+        long ans = 0;
+        int i = 0, j = nums.length - 1;
+        for (; i < j; ++i, --j) {
+            ans += Integer.parseInt(nums[i] + "" + nums[j]);
+        }
+        if (i == j) {
+            ans += nums[i];
+        }
+        return ans;
+    }
+}
+```
+
+* [sol1-C++]
+
+```cpp
+class Solution {
+public:
+    long long findTheArrayConcVal(vector<int>& nums) {
+        long long ans = 0;
+        int i = 0, j = nums.size() - 1;
+        for (; i < j; ++i, --j) {
+            ans += stoi(to_string(nums[i]) + to_string(nums[j]));
+        }
+        if (i == j) {
+            ans += nums[i];
+        }
+        return ans;
+    }
+};
+```
+
+* [sol1-Go]
+
+```go
+func findTheArrayConcVal(nums []int) (ans int64) {
+	i, j := 0, len(nums)-1
+	for ; i < j; i, j = i+1, j-1 {
+		x, _ := strconv.Atoi(strconv.Itoa(nums[i]) + strconv.Itoa(nums[j]))
+		ans += int64(x)
+	}
+	if i == j {
+		ans += int64(nums[i])
+	}
+	return
+}
+```
+
+* [sol1-Rust]
+
+```rust
+impl Solution {
+    pub fn find_the_array_conc_val(nums: Vec<i32>) -> i64 {
+        let n = nums.len();
+        let mut ans = 0;
+        let mut i = 0;
+        let mut j = n - 1;
+        while i < j {
+            ans += format!("{}{}", nums[i], nums[j]).parse::<i64>().unwrap();
+            i += 1;
+            j -= 1;
+        }
+        if i == j {
+            ans += nums[i] as i64;
+        }
+        ans
+    }
+}
+```
+
+* [sol1-TypeScript]
+
+```ts
+function findTheArrayConcVal(nums: number[]): number {
+    const n = nums.length;
+    let ans = 0;
+    let i = 0;
+    let j = n - 1;
+    while (i < j) {
+        ans += Number(`${nums[i]}${nums[j]}`);
+        i++;
+        j--;
+    }
+    if (i === j) {
+        ans += nums[i];
+    }
+    return ans;
+}
+```
+
+时间复杂度 $O(n \times \log M)$，空间复杂度 $O(\log M)$。其中 $n$ 和 $M$ 分别是数组的长度和数组中的最大值。
+
+---
+
+有任何问题，欢迎评论区交流，欢迎评论区提供其它解题思路（代码），也可以点个赞支持一下作者哈😄~
