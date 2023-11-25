@@ -1,0 +1,67 @@
+![image.png](https://pic.leetcode.cn/1697888099-vAowuS-image.png)
+
+* 
+
+```
+假设总共有n个点。
+
+通过深度优先搜索，找到一个回路中有多少个点，假设这个回路有m个点。
+这个回路与其他的点都不互通，结果的和就要加上：
+C(m, 1) * C(n - m, 1) // 2
+
+找到所有的回路，累加这个式子，就可以的得到最终结果。
+
+以示例二计算为例子 n = 7。
+[4 * (7 - 4) + 2 * (7 - 2) + 1 * (7 - 1)] // 2
+= (12 + 10 + 6) // 2
+= 28 // 2
+= 14
+```
+
+* []
+
+```python
+from typing import List
+
+
+class Solution:
+    def __init__(self):
+        self.mark = []
+        self.graph = [[]]
+        self.n = 0
+
+    def dfs(self, x: int) -> int:
+        self.mark[x] = True
+        count = 1
+        for y in self.graph[x]:
+            if self.mark[y]:
+                continue
+            count += self.dfs(y)
+        return count
+
+    # 以示例二计算为例子
+    # [4 * (7 - 4) + 2 * (7 - 2) + 1 * (7 - 1)] // 2
+    # (12 + 10 + 6) // 2
+    # 28 // 2
+    # 14
+    def solve(self) -> int:
+        res = 0
+        for i in range(self.n):
+            if self.mark[i]:
+                continue
+            count = self.dfs(i)
+            res += count * (self.n - count)
+        return res // 2
+
+    def countPairs(self, n: int, edges: List[List[int]]) -> int:
+        self.n = n
+        self.mark = [False for _ in range(n)]
+        self.graph = [[] for _ in range(n)]
+
+        for x, y in edges:
+            self.graph[x].append(y)
+            self.graph[y].append(x)
+
+        return self.solve()
+```
+
