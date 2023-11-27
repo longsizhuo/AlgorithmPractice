@@ -1,0 +1,45 @@
+> Problem: [907. 子数组的最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/description/)
+
+[TOC]
+
+# 思路
+
+1 首先用单调递增的单调栈，维护每个区间的最小值是多少
+
+2 再用动态规划，dp[i] 表示以 i 为下标的子数组的最小值之和
+
+状态转移方程为：
+
+dp[i] = dp[stack.peek()] + arr[i] * k
+
+其中 k 为i 与 当前栈顶值的之差，也就是以 arr[i]为最小值的子数组有 k个，其余的情况交由dp[stack.peek()] 转移而来
+
+# Code
+
+* []
+
+```Java
+class Solution {
+    public int sumSubarrayMins(int[] arr) {
+       int mod = 1000000007;
+        int ans = 0;
+        int n = arr.length;
+        int[] dp = new int[n];
+        Deque<Integer> stack = new LinkedList<>();
+
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+                stack.pop();
+            }
+
+            int k = stack.isEmpty() ? i + 1 : i - stack.peek();
+            dp[i] = k * arr[i] + (stack.isEmpty() ? 0 : dp[stack.peek()]);
+            ans = (ans + dp[i]) % mod;
+            stack.push(i);
+        }
+
+        return ans;
+    }
+}
+```
+

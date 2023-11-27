@@ -48,21 +48,32 @@ from typing import Optional
 
 # leetcode submit region begin(Prohibit modification and deletion)
 # Definition for singly-linked list.
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+
 class Solution:
+    # def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    #     """
+    #     迭代
+    #     """
+    #     pre = None
+    #     cur = head
+    #     while cur:
+    #         tmp = cur.next
+    #         cur.next = pre
+    #         pre = cur
+    #         cur = tmp
+    #     return pre
     def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        """
-        迭代
-        """
-        pre = None
-        cur = head
-        while cur:
-            tmp = cur.next
+        def recur(cur, pre):
+            if not cur:
+                return pre
+            res = recur(cur.next, cur)
             cur.next = pre
-            pre = cur
-            cur = tmp
-        return pre
+            return res
+        return recur(head, None)
+
 # leetcode submit region end(Prohibit modification and deletion)
