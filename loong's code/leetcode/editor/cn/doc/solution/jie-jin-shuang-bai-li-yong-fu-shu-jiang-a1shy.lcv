@@ -1,0 +1,30 @@
+大部分人区分方向用的是元组，多储存一个数表示方向，但是我发现完全可以用正负数表示方向，不仅因为城市ID只有非负数，还因为从0开始搜索，不用担心0对这个过程的影响。所以我们可以在不降低效率的情况下降低内存占用
+
+![image.png](https://pic.leetcode.cn/1700214565-JpBqMQ-image.png)
+
+* []
+
+```Python
+class Solution:
+    def minReorder(self, n: int, connections: List[List[int]]) -> int:
+        # 建图的时候，指向的城市为正，被指向的为负
+        map_ = [[] for _ in range(n)]
+        for from_, to in connections:
+            map_[from_].append(to)
+            map_[to].append(-from_)
+        ans = 0
+        # 从0开始广搜，遇到正数答案就+1，遍历过的改为False
+        not_visit = [True] * n
+        not_visit[0] = False
+        q = deque([0])
+        while q:
+            for j in map_[q.popleft()]:
+                if not_visit[i := abs(j)]:
+                    q.append(i)
+                    if j > 0:
+                        ans += 1
+                    not_visit[i] = False
+        return ans
+                            
+```
+

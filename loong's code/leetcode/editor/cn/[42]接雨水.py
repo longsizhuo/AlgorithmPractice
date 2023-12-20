@@ -38,8 +38,7 @@ class Solution:
     def trap(self, height: List[int]) -> int:
         ans = 0
         left, right = 0, len(height) - 1
-        leftMax = rightMax = 0
-
+        leftMax, rightMax = 0, 0
         while left < right:
             leftMax = max(leftMax, height[left])
             rightMax = max(rightMax, height[right])
@@ -49,9 +48,10 @@ class Solution:
             else:
                 ans += rightMax - height[right]
                 right -= 1
-
         return ans
 
 
+
+
 # leetcode submit region end(Prohibit modification and deletion)
-print(Solution().trap(height=[1, 0, 2, 0, 1, 0, 2, 0, 1]))
+print(Solution().trap(height=[0,1,0,2,1,0,1,3,2,1,2,1]))
