@@ -1,0 +1,39 @@
+> Problem: [2696. 删除子串后的字符串最小长度](https://leetcode.cn/problems/minimum-string-length-after-removing-substrings/description/)
+
+[TOC]
+
+# 思路
+
+> 相邻字符匹配成功后会消掉，两端字符变成相邻，再进行新的匹配。
+
+# 解题方法
+
+> 栈。栈顶字符和当前遍历字符进行匹配。
+
+# 复杂度
+
+时间复杂度:
+
+> $O(n)$，$n$为字符串长度。
+
+空间复杂度:
+
+> $O(n)$，$n$为字符串长度。
+
+# Code
+
+* []
+
+```Python
+class Solution:
+    def minLength(self, s: str) -> int:
+        n = len(s)
+        stk = []
+        for ss in s:
+            if stk and stk[-1] + ss in ["AB", "CD"]:
+                stk.pop()
+            else:
+                stk.append(ss)
+        return len(stk)
+```
+
