@@ -63,18 +63,20 @@ from typing import List
 # leetcode submit region begin(Prohibit modification and deletion)
 class Solution:
     def countRoutes(self, locations: List[int], start: int, finish: int, fuel: int) -> int:
+        MOD = 10**9 + 7
         n = len(locations)
-        dp = [0] * (n - 1)
-        # 到达当前点所花的汽油取决于上一个点到我的距离
-        for i in range(n):
-            # 没有前后遍历的区别，所以我觉得应该得双重循环
-            for j in range(n):
-                # 只有i！=j的时候才更新
-                if i != j:
-                    # 本点等于自己上一个的值+自己的值， 上一个的值是j
-                    dp[i] = dp[i] + dp[j]
-        return dp
-        # 统计点中
+        dp = [[0] * (fuel + 1) for _ in range(n)]
+        dp[start][fuel] = 1  # 从起点出发，燃料为 fuel
+
+        for f in range(fuel, -1, -1):
+            for i in range(n):
+                for j in range(n):
+                    if i != j:
+                        cost = abs(locations[i] - locations[j])
+                        if f - cost >= 0:
+                            dp[i][f - cost] = (dp[i][f - cost] + dp[j][f]) % MOD
+
+        return sum(dp[finish]) % MOD
 
 
 # leetcode submit region end(Prohibit modification and deletion)
