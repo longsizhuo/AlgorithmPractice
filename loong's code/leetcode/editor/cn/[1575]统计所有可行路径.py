@@ -63,7 +63,7 @@ from typing import List
 # leetcode submit region begin(Prohibit modification and deletion)
 class Solution:
     def countRoutes(self, locations: List[int], start: int, finish: int, fuel: int) -> int:
-        MOD = 10**9 + 7
+        MOD = 10 ** 9 + 7
         n = len(locations)
         dp = [[0] * (fuel + 1) for _ in range(n)]
         dp[start][fuel] = 1  # 从起点出发，燃料为 fuel
@@ -75,9 +75,10 @@ class Solution:
                         cost = abs(locations[i] - locations[j])
                         if f - cost >= 0:
                             dp[i][f - cost] = (dp[i][f - cost] + dp[j][f]) % MOD
+        print(dp)
 
         return sum(dp[finish]) % MOD
 
 
 # leetcode submit region end(Prohibit modification and deletion)
-print(Solution().countRoutes(locations = [2,3,6,8,4], start = 1, finish = 3, fuel = 5))
+print(Solution().countRoutes(locations=[2, 3, 6, 8, 4], start=1, finish=3, fuel=5))
