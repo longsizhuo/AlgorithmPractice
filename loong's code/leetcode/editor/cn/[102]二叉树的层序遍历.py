@@ -49,26 +49,18 @@ class TreeNode:
         self.right = right
 class Solution:
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        答案 = []
-        # 队列
-        if not root:
-            return []
-        queue = [root]
-        while queue:
-            # 当前队列的长度，这一层的节点数
-            size = len(queue)
-            临时变量 = []
-            # 将队列中的元素都拿出来(也就是获取这一层的节点)，放到临时list中
-            # 如果节点的左/右子树不为空，也放入队列中
-            for _ in range(size):
-                r = queue.pop(0)
-                临时变量.append(r.val)
-                if r.left:
-                    queue.append(r.left)
-                if r.right:
-                    queue.append(r.right)
-            答案.append(临时变量)
-        return 答案
+        ans = []
+        def dfs(node, level):
+            if not node:
+                return
+            if len(ans) == level:
+                ans.append([])
+            ans[level].append(node.val)
+            dfs(node.left, level + 1)
+            dfs(node.right, level + 1)
+        dfs(root, 0)
+        return ans
+
 
 
 # leetcode submit region end(Prohibit modification and deletion)
