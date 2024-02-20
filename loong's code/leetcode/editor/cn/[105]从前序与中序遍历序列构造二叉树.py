@@ -31,27 +31,30 @@
  <li><code>inorder</code>&nbsp;<strong>保证</strong> 为二叉树的中序遍历序列</li> 
 </ul>
 
-<div><div>Related Topics</div><div><li>树</li><li>数组</li><li>哈希表</li><li>分治</li><li>二叉树</li></div></div><br><div><li>👍 1962</li><li>👎 0</li></div>
+<div><div>Related Topics</div><div><li>树</li><li>数组</li><li>哈希表</li><li>分治</li><li>二叉树</li></div></div><br><div><li>👍 2239</li><li>👎 0</li></div>
 """
+
+# leetcode submit region begin(Prohibit modification and deletion)
 from typing import List, Optional
 
 
-# leetcode submit region begin(Prohibit modification and deletion)
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
-
-
 class Solution:
+
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
-        if len(inorder) == 0:
+        if not preorder or not inorder:
             return None
-        root = TreeNode(preorder[0])
-        mid = inorder.index(preorder[0])
-        root.left = self.buildTree(preorder[1:mid + 1], inorder[:mid])
-        root.right = self.buildTree(preorder[mid + 1:], inorder[mid + 1:])
+        root_val = preorder[0]
+        root = TreeNode(root_val)
+        # 递归构建左子树和右子树
+        # 前序遍历中，根节点之后到 index 对应的元素是左子树的前序遍历结果
+        # 中序遍历中，从开始到 index 的元素是左子树的中序遍历结果
+        index = inorder.index(root_val)
+        root.left = self.buildTree(preorder[1:index+1], inorder[:index])
+
+        # 前序遍历中，从 index+1 到末尾的元素是右子树的前序遍历结果
+        # 中序遍历中，从 index+1 到末尾的元素是右子树的中序遍历结果
+        root.right = self.buildTree(preorder[index+1:], inorder[index+1:])
         return root
+
 # leetcode submit region end(Prohibit modification and deletion)
