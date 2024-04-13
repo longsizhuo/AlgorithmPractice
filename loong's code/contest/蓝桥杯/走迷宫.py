@@ -1,39 +1,26 @@
-from typing import List
-from collections import deque
-
-
-def bfs_min_steps(grid, start_x, start_y, end_x, end_y):
-    n, m = len(grid), len(grid[0])
-    queue = deque([(start_x - 1, start_y - 1, 0)])  # 使用0-based索引，记录步数
-    visited = set()
-    visited.add((start_x - 1, start_y - 1))
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # 右，下，左，上
-
-    while queue:
-        x, y, steps = queue.popleft()
-
-        # 如果到达终点
-        if (x, y) == (end_x - 1, end_y - 1):
-            return steps
-
-        # 探索四个方向
-        for dx, dy in directions:
-            nx, ny = x + dx, y + dy
-            if 0 <= nx < n and 0 <= ny < m and (nx, ny) not in visited and grid[nx][ny] == 1:
-                visited.add((nx, ny))
-                queue.append((nx, ny, steps + 1))
-
-    return -1  # 如果没有路径到达终点
-
-
-# 读取输入
 N, M = map(int, input().split())
 matrix = []
 for i in range(N):
     matrix.append(list(map(int, input().split())))
+print(matrix)
 
 x1, y1, x2, y2 = map(int, input().split())
+print(x1, x2, y1, y2)
+route = [
+    [0, 1],
+    [1, 0],
+    [0, -1],
+    [-1, 0]
+]
+node_x, node_y = x1, y1
+depth = 0
+arrived = []
+while node_x != x2 or node_y != y2:
+    neighbour = []
+    for i, j in route:
+        if 0 <= node_x + i < N and 0 <= node_y + j < M:
+            if matrix[node_x + i][node_y + j] == 1:
+                if [node_x + i, node_y + j] not in arrived:
+                    
+                neighbour.append([node_x + i, node_y + j])
 
-# 调用BFS函数
-result = bfs_min_steps(matrix, x1, y1, x2, y2)
-print(result)
