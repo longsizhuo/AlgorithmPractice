@@ -21,6 +21,4 @@ while node_x != x2 or node_y != y2:
         if 0 <= node_x + i < N and 0 <= node_y + j < M:
             if matrix[node_x + i][node_y + j] == 1:
                 if [node_x + i, node_y + j] not in arrived:
-                    
-                neighbour.append([node_x + i, node_y + j])
-
+                    neighbour.append([node_x + i, node_y + j])
