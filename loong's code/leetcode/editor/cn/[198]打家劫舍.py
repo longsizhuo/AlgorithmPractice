@@ -45,4 +45,4 @@ class Solution:
 
 
 # leetcode submit region end(Prohibit modification and deletion)
-print(Solution().rob([1, 2, 3, 1]))
+print(Solution().rob([9, 3, 2, 1, 9]))
