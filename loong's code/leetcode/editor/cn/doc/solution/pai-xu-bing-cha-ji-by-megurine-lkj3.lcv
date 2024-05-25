@@ -1,0 +1,83 @@
+Dijkstra 解法请移步[三叶的题解](https://leetcode-cn.com/problems/trapping-rain-water-ii/solution/gong-shui-san-xie-jing-dian-dijkstra-yun-13ik/)🤩🤩🤩
+
+## 思路
+
+**为什么可以用并查集？**
+题目问的是，各个单元能容纳水的最大数量，考虑先对所有单元按高度升序排列，然后模拟涨水过程，每次将水位涨到未处理单元的最小高度，即按升序排列顺序处理
+
+每次处理一个单元格时，如果其上下左右方向存在其它已处理的单元，将它们并入同一个集合中，如果并入集合后，该集合与边界连通，如下图：
+![pwtu.jpg](https://pic.leetcode-cn.com/1635904888-pgoeTC-pwtu.jpg)
+
+说明蓝色单元集合最大盛水高度即为当前水位高度（也即橘色单元的高度），将蓝色单元集合并入绿色单元集合，并将蓝色单元集合的盛水量加入入最终结果
+
+因为是按照高度从小到大的顺序处理，故蓝色单元集合周围的其它单元的高度必然大于等于橘色单元的高度
+
+设当前蓝色单元集合的所有单元的高度总和为 $Hs_{blue}$，单元个数为 $Cnt_{blue}$，盛水容量为 $Cap_{blue}$，橘色单元的高度为 $H_{orange}$，则计算公式为：
+$$
+Cap_{blue} = Cnt_{blue} \times H_{orange} - Hs_{blue}
+$$
+其中 $Hs_{blue}$ 和 $Cnt_{blue}$ 可以在集合合并的过程中计算
+
+## 实现
+
+> 将0作为矩阵外单元的集合，$row \times n + col + 1$，作为单元 $(row, col)$ 的初始集合，$cnt[row \times n + col + 1] > 0$ 时即可说明该单元已处理
+> 实现方式不唯一，也可以使用其它方式
+
+* 
+
+```
+def boundary(row: int, column: int, offsets=None):
+    if offsets is None:
+        offsets = [(-1, 0), (1, 0), (0, 1), (0, -1)]
+
+    def around(r: int, c: int, valid=None):
+        for dr, dc in offsets:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < row and 0 <= nc < column:
+                if valid is None or valid(nr, nc):
+                    yield nr, nc
+
+    return around
+
+class Solution:
+    def trapRainWater(self, heights: List[List[int]]) -> int:
+        m, n = len(heights), len(heights[0])
+        arr = [(heights[i][j], i, j) for j in range(n) for i in range(m)]
+        arr.sort(key=lambda it:it[0])
+
+        f = list(range(m * n + 1))
+        cnt = [0] * (m * n + 1)
+        hs = [0] * (m * n + 1)
+        ans = 0
+
+        def find(i):
+            if i != f[i]:
+                f[i] = find(f[i])
+            return f[i]
+
+        def union(i, j, h):
+            nonlocal ans
+            fi, fj = find(i), find(j)
+            if fi != fj:
+                if fi > fj:
+                    fi, fj = fj, fi
+                f[fj] = fi
+                cnt[fi] += cnt[fj]
+                hs[fi] += hs[fj]
+                if fi == 0:
+                    ans += h * cnt[fj] - hs[fj]
+
+        around = boundary(m, n)
+        for h, i, j in arr:
+            ij = i * n + j + 1
+            cnt[ij], hs[ij] = 1, h
+            for ni, nj in around(i, j):
+                nij = ni * n + nj + 1
+                if cnt[nij] > 0:
+                    union(ij, nij, h)
+            if i == 0 or j == 0 or i == m - 1 or j == n - 1:
+                union(0, ij, h)
+
+        return ans
+```
+

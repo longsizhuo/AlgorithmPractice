@@ -1,0 +1,171 @@
+> Problem: [407. 接雨水 II](https://leetcode.cn/problems/trapping-rain-water-ii/description/)
+
+[TOC]
+
+# 思路
+
+本题最简单的思维就是将三维转成二维一层一层的求解，
+二维的解法就是 [岛屿的最大面积](https://leetcode.cn/problems/ZL6zAn/) 这题思路类似, 不过我们求的是总面积 （总面积 = 长 * 宽 - 柱子数量 - 与水联通的空地）
+然后柱子在每一层的面积可以使用线段（树桩数组）区间加法。求出来
+
+思路讲解完毕
+
+朴素解法的时间复杂度是 10^4 x (mn + log(10^4))  这个复杂度会超时是不能接受的
+下面讲解一些优化：
+1. 因为柱子的高度是连续的不存在中间缺一些的情况所以我们可以搜集所有的高度排序，遍历，（两个连续高度 a, b ; a < b）中间的高度(a ~ b)的面积都是和b答案一样的。这样就可以将复杂度优化到 mn x (mn + log(10^4))
+2. 因为柱子的高度是连续的 所以我们每层 bfs 求与水相连的面积不用重头开始求，而是可以保留上一次的面结结果，然后找到这一层比上一层新增空地（就是面积等于上一层的那些点）开始 bfs
+   这样时间复杂度可以均摊优化到 mn x  (log(10^4))
+
+代码写的有点乱，没有优化 😅
+
+# 解题方法
+
+> 描述你的解题方法
+
+# 复杂度
+
+时间复杂度:
+
+> 添加时间复杂度, 示例： $O(n)$
+
+空间复杂度:
+
+> 添加空间复杂度, 示例： $O(n)$
+
+# Code
+
+* []
+
+```Python
+from collections import defaultdict
+from typing import List
+
+
+class Tree:
+    def __init__(self, len) -> None:
+        self.st = [0] * (4 * len + 4)
+        self.lazy = [0] * (4 * len + 4)
+
+    def pushdown(self, node):
+        val = self.lazy[node]
+        if not val:
+            return
+
+        self.st[node * 2] += val
+        self.st[node * 2 + 1] += val
+        self.lazy[node * 2] += val
+        self.lazy[node * 2 + 1] += val
+        self.lazy[node] = 0
+
+    def update(self, L, R, val, node, l, r):
+        if r < L or l > R:
+            return
+        if L <= l and r <= R:
+            self.st[node] += val
+            if l != r:
+                self.lazy[node] += val
+            return
+
+        self.pushdown(node)
+
+        mid = (l + r) // 2
+        self.update(L, R, val, node * 2, l, mid)
+        self.update(L, R, val, node * 2 + 1, mid + 1, r)
+        self.st[node] = self.st[node * 2] + self.st[node * 2 + 1]
+
+    def query(self, index, node, l, r):
+        if index < l or index > r:
+            return 0
+        if l == r:
+            if l == index:
+                return self.st[node]
+            return 0
+
+        self.pushdown(node)
+
+        mid = (l + r) // 2
+        return self.query(index, node * 2, l, mid) + self.query(
+            index, node * 2 + 1, mid + 1, r
+        )
+
+
+class Solution:
+    def trapRainWater(self, heightMap: List[List[int]]) -> int:
+        heights = set()
+        m = len(heightMap)
+        n = len(heightMap[0])
+
+        mh = 0
+        countMap = defaultdict(set)
+        visited = set()
+
+        for i in range(m):
+            for j in range(n):
+                mh = heightMap[i][j] + 1 if heightMap[i][j] > mh else mh
+                heights.add(heightMap[i][j])
+                countMap[heightMap[i][j]].add((i, j))
+
+        st = Tree(mh)
+        for i, j in countMap.items():
+            st.update(0, i, len(j), 1, 0, mh)
+
+        heights = sorted(list(heights))
+
+        res = 0
+        preH = heights[0]
+        for h in heights:
+            count = st.query(h, 1, 0, mh)
+            print(h, count)
+            if count >= 4 and count != m * n:
+                ep = self.calc(heightMap, h, m, n, visited, countMap[preH])
+                res += (h - preH) * (m * n - (ep) - count)
+            preH = h
+        return res
+
+    def calc(self, ls, h, m, n, visited: set, add: set):
+        queue = []
+        for i in range(m):
+            if (i, 0) not in visited and ls[i][0] < h:
+                queue.append((i, 0))
+                visited.add((i, 0))
+
+            if (i, n - 1) not in visited and ls[i][n - 1] < h:
+                queue.append((i, n - 1))
+                visited.add((i, n - 1))
+        for i in range(n):
+            if (0, i) not in visited and ls[0][i] < h:
+                queue.append((0, i))
+                visited.add((0, i))
+
+            if (m - 1, i) not in visited and ls[m - 1][i] < h:
+                queue.append((m - 1, i))
+                visited.add((m - 1, i))
+
+        # 在集合种的节点再次遍历四周的点
+        for i, j in add:
+            for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                nx, ny = i + dx, j + dy
+                if nx < 0 or nx >= m or ny < 0 or ny >= n:
+                    continue
+                # 当新增的节点和已经遍历的节点相邻时，将其加入队列
+                if (nx, ny) in visited:
+                    queue.append((i, j))
+                    visited.add((i, j))
+                    break
+
+        while queue:
+            x, y = queue.pop()
+            for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                nx, ny = x + dx, y + dy
+                if nx < 0 or nx >= m or ny < 0 or ny >= n:
+                    continue
+                if (nx, ny) in visited:
+                    continue
+
+                if ls[nx][ny] < h:
+                    visited.add((nx, ny))
+                    queue.append((nx, ny))
+
+        return len(visited)
+```
+
