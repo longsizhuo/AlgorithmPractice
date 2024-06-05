@@ -63,10 +63,6 @@
 
 <div><div>Related Topics</div><div><li>树状数组</li><li>线段树</li><li>数组</li><li>模拟</li></div></div><br><div><li>👍 38</li><li>👎 0</li></div>
 """
-from typing import List
-import bisect
-import heapq
-
 
 # leetcode submit region begin(Prohibit modification and deletion)
 import bisect
